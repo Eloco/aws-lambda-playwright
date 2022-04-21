@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/bin/sh
 kill_child_processes() {
   kill -TERM "$lambda"
   wait "$lambda"
