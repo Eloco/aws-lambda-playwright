@@ -40,8 +40,9 @@ COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
 
 COPY ./entry_script.sh              /
 COPY ./xvfb-lambda-entrypoint.sh    /
-RUN chmod +x /entry_script.sh /xvfb-lambda-entrypoint.sh
 ADD aws-lambda-rie /usr/local/bin/aws-lambda-rie 
+
+RUN chmod +x /entry_script.sh /xvfb-lambda-entrypoint.sh  /usr/local/bin/aws-lambda-rie
 
 ENTRYPOINT [ "/xvfb-lambda-entrypoint.sh" ]
 
