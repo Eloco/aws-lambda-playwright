@@ -21,17 +21,21 @@ RUN mkdir -p ${FUNCTION_DIR}
 # Copy function code
 COPY app/* ${FUNCTION_DIR}
 
+RUN pip uninstall \
+        playwright -y
+
 # Install the runtime interface client
 RUN pip install \
         --target ${FUNCTION_DIR} \
         --no-cache-dir \
-        awslambdaric virtualenv
+        awslambdaric virtualenv playwright
+
 
 # Multi-stage build: grab a fresh copy of the base image
 FROM mcr.microsoft.com/playwright/python:latest
 
-# move playwright to /opt
-RUN mv /ms-playwright /opt/ms-playwright ; chmod -R 777 /opt/ms-playwright ; ln -s /opt/ms-playwright /ms-playwright
+# remove playwright browsers 
+RUN rm -rf /ms-playwright
 
 # Include global arg in this stage of the build
 ARG FUNCTION_DIR
@@ -43,13 +47,17 @@ WORKDIR ${FUNCTION_DIR}
 COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
 
 # create virtualenv
-RUN python -m virtualenv $(basename $(pwd))
+RUN python -m virtualenv venv
 
 COPY ./entry_script.sh              /
 COPY ./xvfb-lambda-entrypoint.sh    /
 ADD aws-lambda-rie /usr/local/bin/aws-lambda-rie  
 
-RUN chmod +x /entry_script.sh /xvfb-lambda-entrypoint.sh  /usr/local/bin/aws-lambda-rie ${FUNCTION_DIR}/*
+RUN chmod -R +x /entry_script.sh /xvfb-lambda-entrypoint.sh  /usr/local/bin/aws-lambda-rie ${FUNCTION_DIR}
+
+ENV PLAYWRIGHT_BROWSERS_PATH=${FUNCTION_DIR}/pw-browsers
+
+RUN . venv/bin/activate; python -m playwright install 
 
 ENTRYPOINT [ "/xvfb-lambda-entrypoint.sh" ]
 
