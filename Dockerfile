@@ -29,6 +29,9 @@ RUN pip install \
 # Multi-stage build: grab a fresh copy of the base image
 FROM mcr.microsoft.com/playwright/python:latest
 
+# move playwright to /opt
+RUN mv /ms-playwright /opt/ms-playwright ; chmod -R 777 /opt/ms-playwright ; ln -s /opt/ms-playwright /ms-playwright
+
 # Include global arg in this stage of the build
 ARG FUNCTION_DIR
 

@@ -5,7 +5,7 @@ from playwright.sync_api import sync_playwright
 
 def handler(event, context):
     with sync_playwright() as playwright:
-        browser = playwright.firefox.launch(headless=False)
+        browser = playwright.firefox.launch(headless=False,args=['--disable-gpu'])
         context = browser.new_context()
         page    = context.new_page()
         page.goto('http://example.com/')
