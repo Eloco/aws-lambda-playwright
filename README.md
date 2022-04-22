@@ -18,7 +18,6 @@ bs64=`echo "stealth_sync(page);page.goto('http://whatsmyuseragent.org/',wait_unt
 curl -s -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"webkit":"iPhone SE","run":"'${bs64}'"}' | jq .body | html2text | sed  's/[\\n" ]//g' | grep -v '^$'
 curl -s -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"webkit":"random","run":"'${bs64}'"}' | jq .body | html2text | sed  's/[\\n" ]//g' | grep -v '^$'
 
-
 __[__What'smyUserAget?](#page-top)
 *[](#page-top)
 Mozilla/5.0(iPad;CPUOS12_2likeMacOSX)AppleWebKit/605.1.15(KHTML,
