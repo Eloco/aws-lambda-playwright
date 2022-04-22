@@ -59,6 +59,8 @@ ENV PLAYWRIGHT_BROWSERS_PATH=${FUNCTION_DIR}/pw-browsers
 
 RUN . venv/bin/activate; python -m playwright install 
 
+ENV FUNCTION_DIR="/function"
+
 ENTRYPOINT [ "/xvfb-lambda-entrypoint.sh" ]
 
 CMD [ "app.handler" ]
