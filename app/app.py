@@ -16,7 +16,7 @@ def handler(event, context):
         if "webkit" in event:
             browser = playwright.webkit.launch(headless=True)
             if   event["webkit"] in playwright.devices:
-                device_name = playwright.devices[event["webkit"]]
+                device_name = event["webkit"]
                 device      = playwright.devices[device_name]
                 context     = browser.new_context(**device,)
             elif event["webkit"] == "random":
