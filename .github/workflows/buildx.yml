@@ -50,6 +50,8 @@ jobs:
         tags: |
           ${{ steps.docker_meta.outputs.tags }}
         labels: ${{ steps.docker_meta.outputs.labels }}
+        cache-from: type=registry,ref=${{ env.GITHUB_CONTAINER_REGISTRY_IMAGE }}:latest-dev
+
     - name: Create release
       uses: actions/create-release@v1
       env:
