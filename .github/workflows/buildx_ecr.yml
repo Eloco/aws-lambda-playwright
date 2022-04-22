@@ -1,0 +1,23 @@
+name: Build and publish to public ECR
+
+# Controls when the action will run. 
+on:
+  push:
+    branches:    
+      - main
+      - 'releases/**'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - id: ecr
+      name: Push to public ECR
+      uses: citizensadvice/publish-to-public-ecr-github-action@main
+      with: 
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        ecr-alias: 421484303838
