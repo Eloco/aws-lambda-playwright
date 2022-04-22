@@ -24,7 +24,8 @@ COPY app/* ${FUNCTION_DIR}
 # Install the runtime interface client
 RUN pip install \
         --target ${FUNCTION_DIR} \
-        awslambdaric
+        --no-cache-dir \
+        awslambdaric virtualenv
 
 # Multi-stage build: grab a fresh copy of the base image
 FROM mcr.microsoft.com/playwright/python:latest
@@ -40,6 +41,9 @@ WORKDIR ${FUNCTION_DIR}
 
 # Copy in the build image dependencies
 COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
+
+# create virtualenv
+RUN python -m virtualenv $(basename $(pwd))
 
 COPY ./entry_script.sh              /
 COPY ./xvfb-lambda-entrypoint.sh    /
