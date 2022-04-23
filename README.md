@@ -6,7 +6,7 @@ build on
 - https://github.com/Eloco/aws-lambda-playwright/pkgs/container/aws-lambda-playwright
 
 base on:
-- https://github.com/Eloco/local-lambda-playwright  (not support due to lib and permission issue)
+- https://github.com/Eloco/local-lambda-playwright  (not support cloud aws due to lib and permission issue on chrommium and firefox)
 
 note: support aws cloud (webkit version)
 ```
