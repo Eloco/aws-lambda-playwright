@@ -9,13 +9,13 @@ import datetime,time,random
 import httpx,requests
 import traceback
 
-result = """ u need to send param  event[run] with base64 encode """
+body = """ u need to send param  event[run] with base64 encode """
 
 def handler(event, context):
     status_code = 200
     try:
         with sync_playwright() as playwright:
-            global result
+            global body
             if "webkit" in event:
                 browser = playwright.webkit.launch(headless=True)
                 device_name = event["webkit"]
@@ -34,7 +34,7 @@ def handler(event, context):
                 context     = browser.new_context(**device,)
                 page = context.new_page()
 
-            run="global result;"
+            run="global body;"
             if "run" in event.keys():
                 try:
                     run+=base64.b64decode(event["run"]).decode('utf-8')
@@ -44,11 +44,11 @@ def handler(event, context):
             exec(run)
 
     except Exception as e:
-        result=str(e)
+        body=str(e)
         traceback.print_exc()
         status_code = 500
 
     return {
-        'code'  : status_code,
-        'result': result,
+        'statusCode'  : status_code,
+        'body': body,
     }
