@@ -4,3 +4,4 @@ lxml==4.8.0
 pandas==1.4.2
 requests==2.22.0
 html2text==2020.1.16
+jq
