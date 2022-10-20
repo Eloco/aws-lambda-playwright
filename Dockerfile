@@ -1,6 +1,6 @@
 ARG FUNCTION_DIR="/function"
 
-FROM ghcr.io/eloco/local-lambda-playwright:sha-dcb560d
+FROM ghcr.io/eloco/local-lambda-playwright:latest
 
 ARG FUNCTION_DIR
 
