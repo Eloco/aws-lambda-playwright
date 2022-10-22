@@ -17,23 +17,23 @@ def handler(event, context):
     script_dir = os.path.dirname(os.path.abspath(__file__))
     template_file="async_template.py"
     result="Hello AWS LAMBDA!"
+    data=event
     pprint(event)
 
-    if event["HttpMethod"]=="GET":
-        print("this is GET")
-        if not event["isBase64Encoded"]:
-            data=event["queryStringParameters"]
-    elif event["HttpMethod"]=="POST":
-        print("this is POST")
-        if not event["isBase64Encoded"]:
-            data=event["body"]
-        else:
-            data=event["body"]
-            data=base64.b64decode(data).decode('utf-8')
-            data=parse.parse_qsl(data)
-    else:
-        print("maybe this is a event trigger")
-        data=event
+    if "HttpMethod" in event:
+        if event["HttpMethod"]=="GET":
+            print("this is GET")
+            if not event["isBase64Encoded"]:
+                data=event["queryStringParameters"]
+        elif event["HttpMethod"]=="POST":
+            print("this is POST")
+            if not event["isBase64Encoded"]:
+                data=event["body"]
+            else:
+                data=event["body"]
+                data=base64.b64decode(data).decode('utf-8')
+                data=parse.parse_qsl(data)
+
 
     if_stealth   = bool(data.get('stealth', False))
     if_reindent  = bool(data.get('reindent', True))
