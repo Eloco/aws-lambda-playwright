@@ -36,9 +36,10 @@ https://github.com/microsoft/playwright/blob/main/packages/playwright-core/src/s
 
 
 ```
-bs64=`echo "await page.goto('http://whatsmyuseragent.org/',wait_until='commit'); result=await page.content()" | base64 -w 0`
-http POST http://127.0.0.1:8080/2015-03-31/functions/function/invocations  run=${bs64} browser="webkit" device="iphone 6" stealth="True"
-curl -s -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"webkit":"random","run":"'${bs64}'"}' | jq .result  | html2text -utf8  | sed -r "s/\\\n//g"  | grep -v '^\s*$' | grep -v '^"'
+$ bs64=`echo "await page.goto('http://whatsmyuseragent.org/',wait_until='commit'); result=await page.content()" | base64 -w 0`
+$ http POST http://127.0.0.1:8080/2015-03-31/functions/function/invocations  run=${bs64} browser="webkit" device="iphone 6" stealth="True"
+
+$ curl -s -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"webkit":"random","run":"'${bs64}'"}' | jq .result  | html2text -utf8  | sed -r "s/\\\n//g"  | grep -v '^\s*$' | grep -v '^"'
 
  What's my User Agent?
 Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38
