@@ -1,5 +1,7 @@
 # aws-lambda-playwright
-AWS lambda with ASYNC Playwright (Webkit) (not support aws cloud due to lib and permission issue on chrommium and firefox)
+
+AWS lambda with ASYNC Playwright (Webkit) 
+(not support aws cloud due to lib and permission issue on chrommium and firefox)
 
 ## INTRO
 
@@ -25,7 +27,7 @@ sudo docker run --rm=True -p 8080:8080 ghcr.io/eloco/aws-lambda-playwright
 ```
 param = {
         run      : "result='AWS Lambda POST'"   ; # base64 or normal run code
-        browser  : "webkit"                     ; # browser name
+        browser  : "webkit"                     ; # browser name(only support webkit)
         device   : "iPhone X"                   ; # device for webkit
         stealth  : false                        ; # if stealth mode
         reindent : true                         ; # if reindent run code
