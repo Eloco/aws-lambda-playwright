@@ -1,8 +1,8 @@
 # aws-lambda-playwright
 
-AWS lambda with ASYNC Playwright (Webkit) 
+AWS lambda with ASYNC Playwright (Only supprt Webkit due to lib and permission issue on chrommium and firefox)
 
-(not support aws cloud due to lib and permission issue on chrommium and firefox)
+(test passed on HTTP API gat way)
 
 ## INTRO
 
