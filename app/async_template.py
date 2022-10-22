@@ -7,9 +7,9 @@ import os,sys,json
 import tempfile
 import traceback
 import random
+import copy
 import sh
 import re
-import copy
 
 from playwright.async_api import async_playwright
 from playwright_stealth import stealth_async
