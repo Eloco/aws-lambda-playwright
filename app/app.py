@@ -55,7 +55,13 @@ def handler(event, context):
             traceback.print_exc()
             status_code = 500
 
-        return {
+        message= {
                 'code'   : status_code ,
                 'result' : result      ,
                }
+        return {
+            'statusCode': 200,
+            'headers': {'Content-Type': 'application/json'},
+            'body': json.dumps(message)
+        }
+
