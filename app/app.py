@@ -17,10 +17,13 @@ def handler(event, context):
     script_dir = os.path.dirname(os.path.abspath(__file__))
     template_file="async_template.py"
     result="Hello AWS LAMBDA!"
+    print(type(event))
+    event=json.loads(event) if type(event)==str else event
     data=event
-    pprint(event)
+    print(dir(data))
 
     if "httpMethod" in event:
+        print("httpMethod in event")
         if event["httpMethod"]=="GET":
             print("this is GET")
             if not event["isBase64Encoded"]:
