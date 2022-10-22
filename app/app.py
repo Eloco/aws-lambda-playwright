@@ -1,54 +1,61 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-from playwright.sync_api import sync_playwright
-from playwright_stealth import stealth_sync
+import asyncio
 import base64
 import os,sys,json
-import datetime,time,random
-import httpx,requests
 import traceback
-
-body = """ u need to send param  event[run] with base64 encode """
+import copy
+import tempfile
+from pprint import pprint
+from pydoc import locate
+import importlib.machinery
 
 def handler(event, context):
     status_code = 200
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    
+
+    result="Hello AWS LAMBDA!"
+    print(r"init",result)
+
+    if_stealth   = bool(event.get('stealth', False))
+    if_reindent  = bool(event.get('reindent', True))
+    browser_name = str(event.get('browser', 'webkit')).strip().lower()
+    device_name  = str(event.get('device', '')).strip().lower()
+    run_code     = str(event.get('run', f'result="{result}"')).strip()
+
+    template_file="async_template.py"
+
     try:
-        with sync_playwright() as playwright:
-            global body
-            if "webkit" in event:
-                browser = playwright.webkit.launch(headless=True)
-                device_name = event["webkit"]
-                if device_name.lower() == "random":
-                    device_name = random.choice(list(playwright.devices.keys()))
-                else:
-                    for d in playwright.devices.keys():
-                        if device_name.lower() == d.lower():
-                            device_name = d
-                            break
-                    if device_name not in playwright.devices.keys():
-                        device_name = "Desktop Firefox"  # use default
+        run_code=base64.b64decode(run_code).decode('utf-8')
+    except:pass
+    run_code     = run_code.replace('\r','\n').replace('\n','\n'+" "*4*2)
 
-                print(f"webkit using [{device_name}]")
-                device      = playwright.devices[device_name]
-                context     = browser.new_context(**device,)
-                page = context.new_page()
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        try:
+            template=open(os.path.join(script_dir,template_file)).read()
+            template=template.replace('<run_code>',run_code)
+            file_path=os.path.join(tmpdirname,"dynamic.py")
+            with open(file_path,"w") as f:
+                f.write(template)
+                del template
+            if if_reindent:os.system(f"python -m reindent {file_path} &> /dev/null; \
+                        python -m autopep8 {file_path} --select=E121,E101,E11 --in-place &> /dev/null; \
+                        cat {file_path}")
 
-            run="global body;"
-            if "run" in event.keys():
-                try:
-                    run+=base64.b64decode(event["run"]).decode('utf-8')
-                except:
-                    run+=event["run"]
-            print(run)
-            exec(run)
+            loader = importlib.machinery.SourceFileLoader('dynamic', file_path)
+            handle = loader.load_module('dynamic')
+            loop = asyncio.get_event_loop()
+            result=loop.run_until_complete( \
+                    handle.main(browser_name=browser_name,if_stealth=if_stealth,device_name=device_name))
 
-    except Exception as e:
-        body=str(e)
-        traceback.print_exc()
-        status_code = 500
+        except Exception as e:
+            result=traceback.format_exc()
+            traceback.print_exc()
+            status_code = 500
 
-    return {
-        'statusCode'  : status_code,
-        'body': body,
-    }
+        return {
+                'code'   : status_code ,
+                'result' : result      ,
+               }
