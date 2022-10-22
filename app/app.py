@@ -34,7 +34,8 @@ def handler(event, context):
                 data=base64.b64decode(data).decode('utf-8')
                 data=parse.parse_qsl(data)
 
-
+    data = json.loads(data) if type(data)==str else data
+    
     if_stealth   = bool(data.get('stealth', False))
     if_reindent  = bool(data.get('reindent', True))
     browser_name = str(data.get('browser', 'webkit')).strip().lower()
