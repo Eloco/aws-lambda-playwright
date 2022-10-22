@@ -25,9 +25,7 @@ def handler(event, context):
         if "httpMethod" in event:
             print("httpMethod in event")
             if event["httpMethod"]=="GET":
-                print("this is GET")
-                if not event["isBase64Encoded"]:
-                    data=event["queryStringParameters"]
+                print("this is GET, we only support POST")
             elif event["httpMethod"]=="POST":
                 print("this is POST")
                 if not event["isBase64Encoded"]:
