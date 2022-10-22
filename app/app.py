@@ -10,20 +10,37 @@ import tempfile
 from pprint import pprint
 from pydoc import locate
 import importlib.machinery
+from urllib import parse
 
 def handler(event, context):
     status_code = 200
     script_dir = os.path.dirname(os.path.abspath(__file__))
     template_file="async_template.py"
     result="Hello AWS LAMBDA!"
+    data={}
 
-    if_stealth   = bool(event.get('stealth', False))
-    if_reindent  = bool(event.get('reindent', True))
-    browser_name = str(event.get('browser', 'webkit')).strip().lower()
-    device_name  = str(event.get('device', '')).strip().lower()
-    run_code     = str(event.get('run', f'result="{result}"')).strip()
+    if "HttpMethod" not in event:
+        print("this is a event trigger")
+        data=event
+    elif event["HttpMethod"]=="GET":
+        print("this is a event GET")
+        if not event["isBase64Encoded"]:
+            data=event["queryStringParameters"]
+    elif event["HttpMethod"]=="POST":
+        print("this is a event POST")
+        if not event["isBase64Encoded"]:
+            data=event["body"]
+        else:
+            data=event["body"]
+            data=base64.b64decode(data).decode('utf-8')
+            data=parse.parse_qsl(data)
 
-    
+    if_stealth   = bool(data.get('stealth', False))
+    if_reindent  = bool(data.get('reindent', True))
+    browser_name = str(data.get('browser', 'webkit')).strip().lower()
+    device_name  = str(data.get('device', '')).strip().lower()
+    run_code     = str(data.get('run', f'result="{result}"')).strip()
+
 
     try:
         run_code=base64.b64decode(run_code).decode('utf-8')
