@@ -20,12 +20,12 @@ def handler(event, context):
     data=event
     pprint(event)
 
-    if "HttpMethod" in event:
-        if event["HttpMethod"]=="GET":
+    if "httpMethod" in event:
+        if event["httpMethod"]=="GET":
             print("this is GET")
             if not event["isBase64Encoded"]:
                 data=event["queryStringParameters"]
-        elif event["HttpMethod"]=="POST":
+        elif event["httpMethod"]=="POST":
             print("this is POST")
             if not event["isBase64Encoded"]:
                 data=event["body"]
