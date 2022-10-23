@@ -1,12 +1,23 @@
 # Commands to start on workspace startup
 tasks:
-  - name: Setup & Build & Test Docker
+  - name: Setup & Build & Test Local Docker
     before: sudo apt-get install httpie awscli -y;
-    init: sudo docker build -t local_aws_lambda . && sudo docker run -p 8080:8080 local_lambda
+    init: |
+      sudo docker build -t          local_aws_lambda
+      sudo docker run -p 8080:8080  local_aws_lambda
     command: http  POST  "http://127.0.0.1:8080/2015-03-31/functions/function/invocations"  browser="webkit" device="random" run="await page.goto('http://whatsmyuseragent.org/',wait_until='commit');result=await page.content()"
+
+  - name: Setup & Build & Test AWS Docker
+    init: |
+      sudo docker pull public.ecr.aws/w3s2d0z8/aws-lambda-playwright:main
+      sudo docker run -p 9000:8080 public.ecr.aws/w3s2d0z8/aws-lambda-playwright:main
+    command: http  POST  "http://127.0.0.1:9000/2015-03-31/functions/function/invocations"  browser="webkit" device="random" run="await page.goto('http://whatsmyuseragent.org/',wait_until='commit');result=await page.content()"
 
 # Ports to expose on workspace startup
 ports:
   - port: 8080
     onOpen: notify
-    name: aws-lambda-playwright
+    name: aws-lambda-playwright local
+  - port: 9000
+    onOpen: notify
+    name: aws-lambda-playwright remote
