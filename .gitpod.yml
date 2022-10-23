@@ -1,6 +1,7 @@
 # Commands to start on workspace startup
 tasks:
-  - name: ECR command
+  - name: build and exec docker
+    before: sudo brew install awscli;
     init: | 
       echo "this is command history help push to ECR"
       echo "you need to run aws configure first"
@@ -8,26 +9,28 @@ tasks:
       export awsID="421484303838"
       export ecrID="w3s2d0z8"
       export awsName=`basename $(pwd)`
-    command: |
       aws ecr create-repository --repository-name ${awsName} --image-scanning-configuration scanOnPush=true --image-tag-mutability MUTABLE
       aws ecr get-login-password --region ${awsRegion} | docker login --username AWS --password-stdin ${awsID}.dkr.ecr.${awsRegion}.amazonaws.com
       docker tag local_docker:latest ${awsID}.dkr.ecr.${awsRegion}.amazonaws.com/${awsName}:latest && docker push ${awsID}.dkr.ecr.${awsRegion}.amazonaws.com/${awsName}:latest
 
   - name: Local Build Docker
-    before: sudo apt-get install httpie awscli -y;
+    before: sudo brew install httpie
     init: |
       sudo docker build -t        local_docker:latest .
       sudo docker run   -d --name local_docker -p 8080:8080  local_docker:latest
     command: |
+      sudo docker restart local_docker &> /dev/null
       http  POST  "http://127.0.0.1:8080/2015-03-31/functions/function/invocations"  browser="webkit" device="random" run="await page.goto('http://whatsmyuseragent.org/',wait_until='commit');result=await page.content()"
       docker logs --since=2m local_docker
 
   - name: Remote Pull Docker
+    before: sudo brew install httpie
     init: |
       sudo docker pull          public.ecr.aws/w3s2d0z8/`basename $(pwd)`:main
       docker tag                public.ecr.aws/w3s2d0z8/`basename $(pwd)`:main    remote_docker:latest
       sudo docker run -d --name remote_docker -p 9000:8080 remote_docker:latest
     command: |
+      sudo docker restart remote_docker &> /dev/null
       http  POST  "http://127.0.0.1:9000/2015-03-31/functions/function/invocations"  browser="webkit" device="random" run="await page.goto('http://whatsmyuseragent.org/',wait_until='commit');result=await page.content()"
       docker logs --since=2m remote_docker
 
