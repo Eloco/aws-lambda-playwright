@@ -26,7 +26,8 @@ tasks:
     init: |
       sudo docker pull          public.ecr.aws/w3s2d0z8/`basename $(pwd)`:main
       sudo docker run -d --name remote_docker -p 9000:8080 public.ecr.aws/w3s2d0z8/`basename $(pwd)`:main
-    command: http  POST  "http://127.0.0.1:9000/2015-03-31/functions/function/invocations"  browser="webkit" device="random" run="await page.goto('http://whatsmyuseragent.org/',wait_until='commit');result=await page.content()"
+    command: |
+      http  POST  "http://127.0.0.1:9000/2015-03-31/functions/function/invocations"  browser="webkit" device="random" run="await page.goto('http://whatsmyuseragent.org/',wait_until='commit');result=await page.content()"
       docker logs --since=2m remote_docker
 
 # Ports to expose on workspace startup
