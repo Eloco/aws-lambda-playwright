@@ -1,6 +1,6 @@
 # Commands to start on workspace startup
 tasks:
-  - name: build and exec docker
+  - name: ECR aws upload
     before: pip install awscli
     init: | 
       echo "this is command history help push to ECR"
