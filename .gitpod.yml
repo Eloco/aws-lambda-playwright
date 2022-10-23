@@ -1,7 +1,7 @@
 # Commands to start on workspace startup
 tasks:
   - name: build and exec docker
-    before: sudo brew install awscli;
+    before: brew install awscli
     init: | 
       echo "this is command history help push to ECR"
       echo "you need to run aws configure first"
@@ -14,7 +14,7 @@ tasks:
       docker tag local_docker:latest ${awsID}.dkr.ecr.${awsRegion}.amazonaws.com/${awsName}:latest && docker push ${awsID}.dkr.ecr.${awsRegion}.amazonaws.com/${awsName}:latest
 
   - name: Local Build Docker
-    before: sudo brew install httpie
+    before: brew install httpie
     init: |
       sudo docker build -t        local_docker:latest .
       sudo docker run   -d --name local_docker -p 8080:8080  local_docker:latest
@@ -24,7 +24,7 @@ tasks:
       docker logs --since=2m local_docker
 
   - name: Remote Pull Docker
-    before: sudo brew install httpie
+    before: brew install httpie
     init: |
       sudo docker pull          public.ecr.aws/w3s2d0z8/`basename $(pwd)`:main
       docker tag                public.ecr.aws/w3s2d0z8/`basename $(pwd)`:main    remote_docker:latest
