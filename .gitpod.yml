@@ -1,8 +1,8 @@
 # Commands to start on workspace startup
 tasks:
   - name: Setup & Build & Test Docker
-    before: apt-get install httpie awscli -y;
-    init: docker build -t local_aws_lambda . && docker run -p 8080:8080 local_lambda
+    before: sudo apt-get install httpie awscli -y;
+    init: sudo docker build -t local_aws_lambda . && sudo docker run -p 8080:8080 local_lambda
     command: http  POST  "http://127.0.0.1:8080/2015-03-31/functions/function/invocations"  browser="webkit" device="random" run="await page.goto('http://whatsmyuseragent.org/',wait_until='commit');result=await page.content()"
 
 # Ports to expose on workspace startup
