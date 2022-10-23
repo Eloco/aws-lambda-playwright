@@ -1,6 +1,6 @@
 # Commands to start on workspace startup
 tasks:
-  - name: (could ignore) aws ECR command
+  - name: ECR command
     command: |
       echo "this is command history help push to ECR"
       echo "you need to aws configure first"
@@ -14,13 +14,6 @@ tasks:
       docker tag  public.ecr.aws/${ecrID}/${awsName}:main ${awsID}.dkr.ecr.${awsRegion}.amazonaws.com/${awsName}:latest && \
           docker push ${awsID}.dkr.ecr.${awsRegion}.amazonaws.com/${awsName}:latest
 
-    before: sudo apt-get install httpie awscli -y;
-    init: |
-      sudo docker build -t       local .
-      sudo docker run -d --name= local_aws_lambda -p 8080:8080 local
-    command: |
-      http  POST  "http://127.0.0.1:8080/2015-03-31/functions/function/invocations"  browser="webkit" device="random" run="await page.goto('http://whatsmyuseragent.org/',wait_until='commit');result=await page.content()"
-      docker logs --since=2m local_aws_lambda
   - name: Local Build Docker
     before: sudo apt-get install httpie awscli -y;
     init: |
