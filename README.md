@@ -17,6 +17,8 @@ note: support aws cloud && local Docker
 
 ## pull or build
 
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/https://github.com/Eloco/aws-lambda-playwright)
+
 ```
 sudo docker pull public.ecr.aws/w3s2d0z8/aws-lambda-playwright:main
 sudo docker pull ghcr.io/eloco/aws-lambda-playwright:latest
