@@ -1,13 +1,13 @@
 # Commands to start on workspace startup
 tasks:
-  - name: Setup & Build & Test Local Docker
+  - name: Local Build Docker
     before: sudo apt-get install httpie awscli -y;
     init: |
       sudo docker build -t          local_aws_lambda .
       sudo docker run -d -p 8080:8080  local_aws_lambda
     command: http  POST  "http://127.0.0.1:8080/2015-03-31/functions/function/invocations"  browser="webkit" device="random" run="await page.goto('http://whatsmyuseragent.org/',wait_until='commit');result=await page.content()"
 
-  - name: Setup & Pull & Test AWS Docker
+  - name: Remote Pull Docker
     init: |
       sudo docker pull public.ecr.aws/w3s2d0z8/aws-lambda-playwright:main
       sudo docker run -d -p 9000:8080 public.ecr.aws/w3s2d0z8/aws-lambda-playwright:main
