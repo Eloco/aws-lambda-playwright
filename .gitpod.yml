@@ -1,17 +1,41 @@
 # Commands to start on workspace startup
 tasks:
+  - name: (could ignore) aws ECR command
+    command: |
+      echo "this is command history help push to ECR"
+      echo "you need to aws configure first"
+      echo "aws configure"
+      echo 'aws ecr create-repository --repository-name ${awsName} --image-scanning-configuration scanOnPush=true --image-tag-mutability MUTABLE'
+      echo 'aws ecr get-login-password --region ${awsRegion} | docker login --username AWS --password-stdin ${awsID}.dkr.ecr.${awsRegion}.amazonaws.com'
+      export awsRegion="ap-east-1"
+      export awsID="421484303838"
+      export ecrID="w3s2d0z8"
+      export awsName=`basename $(pwd)`
+      docker tag  public.ecr.aws/${ecrID}/${awsName}:main ${awsID}.dkr.ecr.${awsRegion}.amazonaws.com/${awsName}:latest && \
+          docker push ${awsID}.dkr.ecr.${awsRegion}.amazonaws.com/${awsName}:latest
+
+    before: sudo apt-get install httpie awscli -y;
+    init: |
+      sudo docker build -t       local .
+      sudo docker run -d --name= local_aws_lambda -p 8080:8080 local
+    command: |
+      http  POST  "http://127.0.0.1:8080/2015-03-31/functions/function/invocations"  browser="webkit" device="random" run="await page.goto('http://whatsmyuseragent.org/',wait_until='commit');result=await page.content()"
+      docker logs --since=2m local_aws_lambda
   - name: Local Build Docker
     before: sudo apt-get install httpie awscli -y;
     init: |
       sudo docker build -t          local_aws_lambda .
-      sudo docker run -d -p 8080:8080  local_aws_lambda
-    command: http  POST  "http://127.0.0.1:8080/2015-03-31/functions/function/invocations"  browser="webkit" device="random" run="await page.goto('http://whatsmyuseragent.org/',wait_until='commit');result=await page.content()"
+      sudo docker run -d --name= local_aws_lambda -p 8080:8080  local_aws_lambda
+    command: |
+      http  POST  "http://127.0.0.1:8080/2015-03-31/functions/function/invocations"  browser="webkit" device="random" run="await page.goto('http://whatsmyuseragent.org/',wait_until='commit');result=await page.content()"
+      docker logs --since=2m local_aws_lambda
 
-  - name: Remote Pull Docker
+  - name: Remote Pull Dockerqhk
     init: |
       sudo docker pull public.ecr.aws/w3s2d0z8/aws-lambda-playwright:main
-      sudo docker run -d -p 9000:8080 public.ecr.aws/w3s2d0z8/aws-lambda-playwright:main
+      sudo docker run -d --name= remote_aws_lambda -p 9000:8080 public.ecr.aws/w3s2d0z8/aws-lambda-playwright:main
     command: http  POST  "http://127.0.0.1:9000/2015-03-31/functions/function/invocations"  browser="webkit" device="random" run="await page.goto('http://whatsmyuseragent.org/',wait_until='commit');result=await page.content()"
+      docker logs --since=2m remote_aws_lambda
 
 # Ports to expose on workspace startup
 ports:
