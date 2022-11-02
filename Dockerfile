@@ -41,8 +41,11 @@ COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
 RUN apt-get update && \
   apt-get install -y \
   mat \
+  jq \
   unzip \
   xvfb \
+  httpie \
+  tesseract-ocr tesseract-ocr-chi-sim \
   libcurl4-openssl-dev
 
   # Copy requirements
