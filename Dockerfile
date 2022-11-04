@@ -63,6 +63,7 @@ RUN apt-get update && \
 # install python
 RUN add-apt-repository -y ppa:deadsnakes/ppa
 RUN apt-get update && apt-get install -y python${PY_VERSION} python3-distutils python3-pip python3-apt
+RUN ln -s `which python3` /usr/bin/python
 
 # install playwright deps
 RUN python -m playwright install-deps && \
