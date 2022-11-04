@@ -1,8 +1,10 @@
 # Define function directory
 #https://docs.aws.amazon.com/lambda/latest/dg/images-create.html
 ARG FUNCTION_DIR="/function"
+ARG PY_VERSION=3.10
+ARG UBUNTU_TAG=22.04
 
-FROM python:3.10.8-buster as build-image
+FROM ubuntu:${UBUNTU_TAG} as build-image
 
 # Install aws-lambda-cpp build dependencies
 RUN apt-get update && \
@@ -11,7 +13,12 @@ RUN apt-get update && \
   make \
   cmake \
   unzip \
-  libcurl4-openssl-dev
+  libcurl4-openssl-dev \
+  software-properties-common
+
+# install python
+RUN add-apt-repository -y ppa:deadsnakes/ppa
+RUN apt-get update && apt-get install -y python${PY_VERSION} python3-distutils python3-pip python3-apt
 
 # Include global arg in this stage of the build
 ARG FUNCTION_DIR
@@ -27,7 +34,7 @@ RUN pip install -r ${FUNCTION_DIR}/requirements.txt \
         --no-cache-dir 
 
 # Multi-stage build: grab a fresh copy of the base image
-FROM python:3.10.8-buster
+FROM ubuntu:${UBUNTU_TAG}
 
 # Include global arg in this stage of the build
 ARG FUNCTION_DIR
@@ -46,9 +53,16 @@ RUN apt-get update && \
   xvfb \
   httpie \
   tesseract-ocr tesseract-ocr-chi-sim \
-  libcurl4-openssl-dev
+  libcurl4-openssl-dev \
+  software-properties-common
 
-RUN python -m playwright install-deps
+# install python
+RUN add-apt-repository -y ppa:deadsnakes/ppa
+RUN apt-get update && apt-get install -y python${PY_VERSION} python3-distutils python3-pip python3-apt
+
+# install playwright deps
+RUN playwright install-deps && \
+        playwright install webkit
 
   # Copy requirements
 ADD app/* ${FUNCTION_DIR}/
