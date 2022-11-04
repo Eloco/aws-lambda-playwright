@@ -38,7 +38,7 @@ RUN pip install -r ${FUNCTION_DIR}/requirements.txt \
 # Multi-stage build: grab a fresh copy of the base image
 FROM ubuntu:${UBUNTU_TAG}
 ARG DEBIAN_FRONTEND=noninteractive
-ENV PY_VERSION
+ARG PY_VERSION
 
 # Include global arg in this stage of the build
 ARG FUNCTION_DIR
