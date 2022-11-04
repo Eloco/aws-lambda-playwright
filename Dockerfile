@@ -71,6 +71,8 @@ COPY --from=build-image /wheels3 /wheels3
 RUN find /wheels3 -name "*.whl"  -printf "%p\n" | while read PACKAGE; do python -m pip install --no-cache-dir "$PACKAGE"; done; rm -rf /wheels3
 
 # install playwright deps
+ENV PLAYWRIGHT_BROWSERS_PATH=${FUNCTION_DIR}/pw-browsers
+RUN mkdir -r ${PLAYWRIGHT_BROWSERS_PATH}
 RUN python -m playwright install-deps && \
         python -m playwright install webkit
 
