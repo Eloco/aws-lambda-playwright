@@ -30,11 +30,11 @@ RUN mkdir -p ${FUNCTION_DIR}
 # Copy function code
 COPY app/requirements.txt ${FUNCTION_DIR}
 
-RUN cat ${FUNCTION_DIR}/requirements.txt | while read PACKAGE; \
-        do python3 -m pip install "$PACKAGE" \
-            --target ${function_dir} \
-            --no-cache-dir; \
-            done; exit 0
+
+# gather all py3 wheels to /wheels
+RUN mkdir /wheels3
+WORKDIR /wheels3
+RUN cat ${FUNCTION_DIR}/requirements.txt | while read PACKAGE; do python3 -m pip wheel "$PACKAGE"; done; exit 0
 
 # Multi-stage build: grab a fresh copy of the base image
 FROM ubuntu:${UBUNTU_TAG}
@@ -65,6 +65,10 @@ RUN apt-get update && \
 RUN add-apt-repository -y ppa:deadsnakes/ppa
 RUN apt-get update && apt-get install -y python${PY_VERSION} python3-distutils python3-pip python3-apt
 RUN ln -s `which python3` /usr/bin/python
+
+# install wheels from build-image
+COPY --from=build-image /wheels3 /wheels3
+RUN find /wheels3 -name "*.whl"  -printf "%p\n" | while read PACKAGE; do python -m pip install --no-cache-dir "$PACKAGE"; done; rm -rf /wheels3
 
 # install playwright deps
 RUN python -m playwright install-deps && \
