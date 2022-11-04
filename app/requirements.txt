@@ -9,7 +9,6 @@ MarkupSafe==2.0.1
 awslambdaric==2.0.4
 playwright_stealth==1.0.5
 pandas==1.4.2
-requests
 sh==1.14.3
 openpyxl==3.0.10
 xlsxwriter==3.0.3
@@ -20,11 +19,12 @@ litecli==1.9.0
 reindent==3.5.1
 autopep8==2.0.0
 httpx==0.23.0
-httpx[http2]
-httpx[socks]
-httpx[cli]
 shellous==0.20.0
 playwright==1.27.1
 pandas==1.4.2
 regex==2022.10.31
+httpx[http2]
+httpx[socks]
+httpx[cli]
+requests
 mitmproxy

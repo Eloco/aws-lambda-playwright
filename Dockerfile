@@ -30,10 +30,11 @@ RUN mkdir -p ${FUNCTION_DIR}
 # Copy function code
 COPY app/requirements.txt ${FUNCTION_DIR}
 
-# Install the runtime interface client
-RUN pip install -r ${FUNCTION_DIR}/requirements.txt \
-        --target ${FUNCTION_DIR} \
-        --no-cache-dir 
+RUN cat ${FUNCTION_DIR}/requirements.txt | while read PACKAGE; \
+        do python -m pip install "$PACKAGE" \
+            --target ${function_dir} \
+            --no-cache-dir; \
+            done; exit 0
 
 # Multi-stage build: grab a fresh copy of the base image
 FROM ubuntu:${UBUNTU_TAG}
