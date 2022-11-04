@@ -65,8 +65,8 @@ RUN add-apt-repository -y ppa:deadsnakes/ppa
 RUN apt-get update && apt-get install -y python${PY_VERSION} python3-distutils python3-pip python3-apt
 
 # install playwright deps
-RUN playwright install-deps && \
-        playwright install webkit
+RUN python -m playwright install-deps && \
+        python -m playwright install webkit
 
   # Copy requirements
 ADD app/* ${FUNCTION_DIR}/
