@@ -19,3 +19,4 @@ litecli
 autopep8
 reindent
 regex
+requests-async

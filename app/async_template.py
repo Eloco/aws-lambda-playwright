@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
 import datetime,time,random
-import requests
 import base64
 import os,sys,json
 import tempfile
