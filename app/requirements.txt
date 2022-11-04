@@ -19,8 +19,3 @@ litecli
 autopep8
 reindent
 httpx
-httpx[http2]
-httpx[socks]
-httpx[cli]
-shellous
-regex
