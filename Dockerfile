@@ -2,7 +2,7 @@
 #https://docs.aws.amazon.com/lambda/latest/dg/images-create.html
 ARG FUNCTION_DIR="/function"
 
-FROM mcr.microsoft.com/playwright/python:v1.27.0-focal as build-image
+FROM python:3.10.8-buster as build-image
 
 # Install aws-lambda-cpp build dependencies
 RUN apt-get update && \
@@ -27,7 +27,7 @@ RUN pip install -r ${FUNCTION_DIR}/requirements.txt \
         --no-cache-dir 
 
 # Multi-stage build: grab a fresh copy of the base image
-FROM mcr.microsoft.com/playwright/python:v1.27.0-focal
+FROM python:3.10.8-buster
 
 # Include global arg in this stage of the build
 ARG FUNCTION_DIR
@@ -47,6 +47,8 @@ RUN apt-get update && \
   httpie \
   tesseract-ocr tesseract-ocr-chi-sim \
   libcurl4-openssl-dev
+
+RUN python -m playwright install-deps
 
   # Copy requirements
 ADD app/* ${FUNCTION_DIR}/
