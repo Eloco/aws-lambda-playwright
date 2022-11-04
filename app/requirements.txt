@@ -18,5 +18,5 @@ mycli
 litecli
 autopep8
 reindent
-regex
 requests-async
+regex
