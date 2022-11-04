@@ -31,7 +31,7 @@ RUN mkdir -p ${FUNCTION_DIR}
 COPY app/requirements.txt ${FUNCTION_DIR}
 
 RUN cat ${FUNCTION_DIR}/requirements.txt | while read PACKAGE; \
-        do python -m pip install "$PACKAGE" \
+        do python3 -m pip install "$PACKAGE" \
             --target ${function_dir} \
             --no-cache-dir; \
             done; exit 0
