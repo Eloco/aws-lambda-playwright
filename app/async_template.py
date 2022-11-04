@@ -7,7 +7,7 @@ import tempfile
 import traceback
 import random
 import copy
-import sh
+from shellous import sh
 import re
 
 from playwright.async_api import async_playwright
