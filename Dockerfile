@@ -5,6 +5,8 @@ ARG PY_VERSION=3.10
 ARG UBUNTU_TAG=22.04
 
 FROM ubuntu:${UBUNTU_TAG} as build-image
+ARG DEBIAN_FRONTEND=noninteractive
+ENV PY_VERSION=${PY_VERSION}
 
 # Install aws-lambda-cpp build dependencies
 RUN apt-get update && \
@@ -35,6 +37,8 @@ RUN pip install -r ${FUNCTION_DIR}/requirements.txt \
 
 # Multi-stage build: grab a fresh copy of the base image
 FROM ubuntu:${UBUNTU_TAG}
+ARG DEBIAN_FRONTEND=noninteractive
+ENV PY_VERSION=${PY_VERSION}
 
 # Include global arg in this stage of the build
 ARG FUNCTION_DIR
