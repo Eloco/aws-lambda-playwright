@@ -6,10 +6,6 @@ AWS lambda with ASYNC Playwright (Only supprt Webkit due to lib and permission i
 
 ## INTRO
 
-build on
-- https://gallery.ecr.aws/w3s2d0z8/aws-lambda-playwright
-- https://github.com/Eloco/aws-lambda-playwright/pkgs/container/aws-lambda-playwright
-
 base on:
 - https://github.com/Eloco/normal-playwright-api
 
@@ -20,7 +16,6 @@ note: support aws cloud && local Docker
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/Eloco/aws-lambda-playwright)
 
 ```
-sudo docker pull public.ecr.aws/w3s2d0z8/aws-lambda-playwright:main
 sudo docker pull ghcr.io/eloco/aws-lambda-playwright:latest
 sudo docker run --rm=True -p 8080:8080 ghcr.io/eloco/aws-lambda-playwright
 ```
